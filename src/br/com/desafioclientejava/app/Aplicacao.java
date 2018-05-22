@@ -1,5 +1,6 @@
 package br.com.desafioclientejava.app;
 
+import br.com.desafioclientejava.model.Cliente;
 import br.com.desafioclientejava.model.Loja;
 import br.com.desafioclientejava.util.DesafioAPI;
 import com.google.gson.Gson;
@@ -241,7 +242,7 @@ public class Aplicacao {
             email = teclado.nextLine();
             System.out.println("Digite o telefone: ");
             tel = teclado.nextLine();
-
+            api.cadastrar_cliente(nome, cpf, email, tel, loja);
             System.out.println("Cliente cadastrado com sucesso!\n");
 
         } catch (Exception e) {
@@ -328,7 +329,7 @@ public class Aplicacao {
             System.out.println("----------------------------");
             System.out.println("LISTA DE CLIENTES CADASTRADOS");
             System.out.println("----------------------------");
-            for (Cliente cliente : Sistema.listarClientes(loja)) {
+            for (Cliente cliente : api.listar_clientes(loja.getCnpj())) {
                 System.out.println("Nome: " + cliente.getNome() + " CPF: " + cliente.getCpf() + " Email: " + cliente.getEmail() + " Tel: " + cliente.getTel());
             }
 
@@ -441,7 +442,7 @@ public class Aplicacao {
             System.out.println("----------------------------");
             System.out.println("Digite o CPF: ");
             cpf = teclado.nextLine();
-            Sistema.remover_Cliente(cpf, loja);
+            api.remover_cliente(loja.getCnpj(), cpf);
             System.out.println("Cliente removido com sucesso!");
 
         } catch (Exception e) {

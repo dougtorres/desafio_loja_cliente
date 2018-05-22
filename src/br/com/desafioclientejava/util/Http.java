@@ -5,12 +5,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import javax.xml.ws.Response;
 
 /**
  *
  * @author marcelosiedler
- */
+ */	
 public class Http {
 
     private final String USER_AGENT = "Mozilla/5.0";
