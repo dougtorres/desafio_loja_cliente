@@ -1,30 +1,20 @@
-package br.com.desafioconfuctorws.app;
+package br.com.desafioclientejava.app;
 
-import br.com.desafioclientejava.app.Http;
-import br.com.desafioclientejava.model.Categoria;
-import br.com.desafioclientejava.model.Cliente;
 import br.com.desafioclientejava.model.Loja;
-import br.com.desafioclientejava.model.Produto;
-import br.com.desafioclientejava.model.Usuario;
-import br.com.desafioclientejava.model.Venda;
-import br.com.desafioclientejava.model.Vendedor;
-import br.com.desafioconductorws.model.*;
+import br.com.desafioclientejava.util.DesafioAPI;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Aplicacao {
 
     private static Scanner teclado = new Scanner(System.in);
-    public static Http http = new Http();
+    private static DesafioAPI api = new DesafioAPI();
 
-    private static void main(String[] args) {
-
+    
+    public static void main(String[] args) {
         Aplicacao exec = new Aplicacao();
-
     }
+    
 
     public Aplicacao() {
         processaMenu();
@@ -103,6 +93,7 @@ public class Aplicacao {
                     case 5:
                         acessar_loja();
                         break;
+                     
                     default:
                         System.out.println("Opcao Invalida \n");
                 }
@@ -194,7 +185,7 @@ public class Aplicacao {
                         break;
                     case 21:
                         transferir_produto(loja);
-                        break;
+                        break; 
                     default:
                         System.out.println("Opcao Invalida \n");
                 }
@@ -222,23 +213,18 @@ public class Aplicacao {
             nome = teclado.nextLine();
             System.out.println("Digite o CNPJ: ");
             cnpj = Integer.parseInt(teclado.nextLine());
-            String chamadaWS;
-
-            chamadaWS = "http://localhost:8080/DesafioConductorWS/webresources/loja/inserir";
-            String json = http.sendGet(chamadaWS);
-            Gson g = new Gson();
-
-            u = g.fromJson(json, usuarioType);
-
-            System.out.println(u.getLogin());
+            
+            if(api.cadastrar_loja(nome, cnpj) == true)
             System.out.println("Loja cadastrada com sucesso!\n");
+            else
+                System.out.println("Loja não cadastrada! Já existe uma loja com este cnpj");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void cadastrar_cliente(Loja loja) {
+    public void cadastrar_cliente(Loja loja) throws Exception{
         String nome;
         String cpf;
         String email;
@@ -255,7 +241,7 @@ public class Aplicacao {
             email = teclado.nextLine();
             System.out.println("Digite o telefone: ");
             tel = teclado.nextLine();
-            Sistema.cadastrar_Cliente(nome, cpf, email, tel, loja);
+
             System.out.println("Cliente cadastrado com sucesso!\n");
 
         } catch (Exception e) {
@@ -264,12 +250,13 @@ public class Aplicacao {
     }
 
     public void listar_lojas() {
-
+  
         try {
             System.out.println("----------------------------");
             System.out.println("LISTA DE LOJAS CADASTRADAS");
             System.out.println("----------------------------");
-            for (Loja loja : Sistema.listarLojas()) {
+            
+            for (Loja loja : api.listar_lojas()) {
                 System.out.println("Nome: " + loja.getName() + " CNPJ: " + loja.getCnpj());
 
             }
@@ -279,7 +266,7 @@ public class Aplicacao {
         }
     }
 
-    public void remover_loja() {
+       public void remover_loja(){
         teclado.nextLine();
         int cnpj;
         try {
@@ -288,14 +275,13 @@ public class Aplicacao {
             System.out.println("----------------------------");
             System.out.println("Digite o CNPJ: ");
             cnpj = Integer.parseInt(teclado.nextLine());
-            Sistema.remover_Loja(cnpj);
+            api.remover_loja(cnpj);
             System.out.println("Loja removida com sucesso!");
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
+       
     public void alterar_loja() {
         int cnpj;
         int novoCnpj;
@@ -310,7 +296,7 @@ public class Aplicacao {
             novoNome = teclado.nextLine();
             System.out.println("Digite o novo CNPJ: ");
             novoCnpj = Integer.parseInt(teclado.nextLine());
-            Sistema.alterar_Loja(cnpj, novoNome, novoCnpj);
+            api.alterar_loja(cnpj, novoNome, novoCnpj);
             System.out.println("Loja alterada com sucesso!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -326,7 +312,7 @@ public class Aplicacao {
             System.out.println("----------------------------");
             System.out.println("Digite o CNPJ da loja");
             cnpj = Integer.parseInt(teclado.nextLine());
-            aux = Sistema.buscar_loja(cnpj);
+            aux = api.buscar_loja(cnpj);
             if (aux == null) {
                 System.out.println("Loja não encontrada");
             }
@@ -336,7 +322,7 @@ public class Aplicacao {
             System.out.println(e.getMessage());
         }
     }
-
+ 
     public void listar_clientes(Loja loja) {
         try {
             System.out.println("----------------------------");
@@ -739,5 +725,5 @@ public class Aplicacao {
             System.out.println(e.getMessage());
         }
     }
-
+  
 }
